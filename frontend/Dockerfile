@@ -1,29 +1,33 @@
-# 🐳 Base image nhỏ gọn
+# 🐳 Base image nhẹ, ổn định cho React
 FROM node:20-alpine
 
-# 📁 Tạo thư mục làm việc
+# 📁 Tạo thư mục làm việc trong container
 WORKDIR /app
 
-# ⚙️ Copy package.json và cài dependency (được cache)
+# ⚙️ Copy file khai báo dependency trước để tận dụng cache
 COPY package*.json ./
+
+# 🧰 Cài đặt các gói cần thiết cho build (Alpine tối giản nên phải thêm)
+RUN apk add --no-cache bash python3 make g++
+
+# 📦 Cài dependency
 RUN npm install
 
 # 📦 Copy toàn bộ source code vào container
 COPY . .
 
-# 🌐 Nhận build argument từ docker-compose
+# 🌐 Nhận biến môi trường từ docker-compose (ví dụ API URL)
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=${REACT_APP_API_URL}
-RUN echo "🌐 Using API URL: $REACT_APP_API_URL"
 
-# 🧱 Build app
-RUN chmod +x node_modules/.bin/react-scripts && CI=false npm run build
+# 🧱 Build app (CI=false để tránh build fail do warning)
+RUN echo "🌐 Using API URL: $REACT_APP_API_URL" && CI=false npm run build
 
-# 🧰 Cài server để serve build
+# 🧰 Cài `serve` để chạy file build tĩnh
 RUN npm install -g serve
 
-# 🚪 Mở port 3000
+# 🚪 Mở port 3000 để container lắng nghe
 EXPOSE 3000
 
-# 🚀 Chạy server
+# 🚀 Chạy app ở chế độ production
 CMD ["serve", "-s", "build", "-l", "3000"]

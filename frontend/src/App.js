@@ -1,17 +1,23 @@
-import React from "react";
-import Hero from "./components/Hero";
+import Header from "./components/Header";
 import About from "./components/About";
+import Skills from "./components/Skills";
+import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
-function App() {
+export default function App() {
   return (
-    <div className="bg-gradient-to-br from-indigo-100 via-white to-purple-100 text-gray-900 font-sans">
-      <Hero />
-      <About />
-      <Projects />
-      <Contact />
-    </div>
+    <>
+      <Header />
+      <main>
+        <About />
+        <Skills />
+        <Experience />
+        <Projects />
+        <Contact />
+      </main>
+      <Footer />
+    </>
   );
 }
-export default App;

@@ -3,7 +3,7 @@ version: "3.8"
 services:
   backend:
     build: ./backend
-    image: hvnn1606/portfolio-backend:latest
+    image: qlanh/portfolio-backend:latest
     container_name: portfolio_backend
     ports:
       - "8080:8080"
@@ -17,7 +17,7 @@ services:
       args:
         # 🧠 Nếu không có ENV REACT_APP_API_URL, mặc định dùng localhost (cho local dev)
         - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8080}
-    image: hvnn1606/portfolio-frontend:latest
+    image: qlanh/portfolio-frontend:latest
     container_name: portfolio_frontend
     ports:
       - "3000:3000"
