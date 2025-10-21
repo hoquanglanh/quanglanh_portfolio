@@ -7,7 +7,7 @@ WORKDIR /app
 # ⚙️ Copy file khai báo dependency trước để tận dụng cache
 COPY package*.json ./
 
-# 🧰 Cài đặt các gói cần thiết cho build (Alpine tối giản nên phải thêm)
+# 🧰 Cài đặt các gói cần thiết cho build
 RUN apk add --no-cache bash python3 make g++
 
 # 📦 Cài dependency
@@ -16,12 +16,14 @@ RUN npm install
 # 📦 Copy toàn bộ source code vào container
 COPY . .
 
-# 🌐 Nhận biến môi trường từ docker-compose (ví dụ API URL)
+# 🌐 Nhận biến môi trường từ docker-compose hoặc GitHub Actions
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 
-# 🧱 Build app (CI=false để tránh build fail do warning)
-RUN echo "🌐 Using API URL: $REACT_APP_API_URL" && CI=false npm run build
+# 🧱 Build app (⚙️ cấp quyền thực thi cho react-scripts)
+RUN chmod +x node_modules/.bin/react-scripts && \
+    echo "🌐 Using API URL: $REACT_APP_API_URL" && \
+    CI=false npm run build
 
 # 🧰 Cài `serve` để chạy file build tĩnh
 RUN npm install -g serve
